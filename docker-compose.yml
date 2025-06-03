@@ -1,0 +1,56 @@
+﻿services:
+  electronictestsystem.webapi:
+    image: ${DOCKER_REGISTRY-}electronictestsystem.webapi
+    container_name: ElectronicTestSystem.WebApi
+    build:
+      context: .
+      dockerfile: ElectronicTestSystem.WebApi/Dockerfile
+    depends_on:
+      - electronictestsystem-db
+    command: ["/app/wait-for-it.sh", "electronictestsystem-db:5432", "--timeout=30", "--strict", "--", "dotnet", "ElectronicTestSystem.WebApi.dll"]
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+
+  electronictestsystem-db:
+    image: postgres:latest
+    container_name: ElectronicTestSystem.Db
+    environment:
+      - POSTGRES_DB=electronictestsystem
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  electronictestsystem-idp:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: ElectronicTestSystem.Identity
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/opt/keycloak/data/import
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files/electronictestsystem-realm-export.json:/opt/keycloak/data/import/electronictestsystem-realm-export.json
+    ports:
+      - 18080:8080
+
+  electronictestsystem-seq:
+    image: datalust/seq:latest
+    container_name: ElectronicTestSystem.Seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8082:80
+
+  electronictestsystem-redis:
+    image: redis:7.0
+    container_name: ElectronicTestSystem.Redis
+    restart: always
+    ports:
+      - 6379:6379

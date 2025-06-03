@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ElectronicTestSystem.ConsoleApi.Clients\ElectronicTestSystem.ConsoleApi.Clients.csproj" />
+      <ProjectReference Include="..\ElectronicTestSystem.ConsoleApi.Contracts\ElectronicTestSystem.ConsoleApi.Contracts.csproj" />
+      <ProjectReference Include="..\ElectronicTestSystem.ConsoleApp.Shared\ElectronicTestSystem.ConsoleApp.Shared.csproj" />
+      <ProjectReference Include="..\ElectronicTestSystem.ConsoleFrameworkV2\ElectronicTestSystem.ConsoleFrameworkV2.csproj" />
+      <ProjectReference Include="..\ElectronicTestSystem.Infrastructure\ElectronicTestSystem.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

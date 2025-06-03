@@ -1,0 +1,14 @@
+LopateevGroup,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User
+LGroup,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User
+GGGG,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User
+test3,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User
+groupgruop,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User,ElectronicTestSystem.Domain.Groups.User
+grouptestsetsetset,ElectronicTestSystem.Domain.Groups.User
+Group11111,ElectronicTestSystem.Domain.Groups.User
+GroupDDD,ElectronicTestSystem.Domain.Groups.User
+y,ElectronicTestSystem.Domain.Groups.User
+12345,ElectronicTestSystem.Domain.Groups.User
+Сбис-21-1,Лопатеев
+Сбис,ЛОпат
+Вин,1,2
+Group,1,2,3
