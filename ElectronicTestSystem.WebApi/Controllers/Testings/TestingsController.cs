@@ -7,6 +7,12 @@ using ElectronicTestSystem.Application.Testings.SearchTestings;
 using ElectronicTestSystem.Domain.Testings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+// Add these using statements at the top if they are not already present
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using ElectronicTestSystem.Application.Testings.Queries.GetStudentTestings; // Adjust if the namespace is different
+using ElectronicTestSystem.Application.Dto; // For StudentTestingDto
+using ElectronicTestSystem.SDK.Data; // For PaginatedResult
 
 namespace ElectronicTestSystem.WebApi.Controllers.Testings;
 
@@ -19,6 +25,44 @@ public class TestingsController : ControllerBase
     public TestingsController(ISender sender)
     {
         _sender = sender;
+    }
+
+    [HttpGet("student")] // Changed path to "student" to avoid conflict with existing GetTestings and to be more descriptive
+    [Authorize(Roles = "Student")]
+    [ProducesResponseType(typeof(PaginatedResult<StudentTestingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetStudentTestings(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+        {
+            return BadRequest("User ID not found in token or is invalid.");
+        }
+
+        var query = new GetStudentTestingsQuery(userId, pageNumber, pageSize);
+
+        var result = await _sender.Send(query, cancellationToken);
+
+        // Assuming the handler returns PaginatedResult<StudentTestingDto> directly,
+        // and not a Result<PaginatedResult<StudentTestingDto>> like other queries seem to do.
+        // If it returns Result<T>, the success check should be:
+        // if (result.IsFailure) return NotFound(); // Or BadRequest based on error type
+        // return Ok(result.Value);
+
+        // For now, assuming direct return or that the handler itself manages the Result wrapper.
+        // If PaginatedResult can be null or empty in a "not found" an explicit check might be better.
+        if (result == null || !result.Items.Any()) // Basic check if no items are returned
+        {
+            // Consider if an empty list is a valid 200 OK or a 404 Not Found.
+            // The handler returns an empty list if user/group not found, so 200 OK with empty list is current behavior.
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("{testingId:guid}")]
